@@ -52,6 +52,36 @@ public class AuthController extends HttpServlet {
         }
     }
     
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String pathInfo = request.getPathInfo();
+
+        if (pathInfo == null || pathInfo.equals("/")) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        switch (pathInfo) {
+            case "/user":
+                handleGetUser(request, response);
+                break;
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+    private void handleGetUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("userId") != null) {
+            String username = (String) session.getAttribute("username");
+            sendJsonResponse(response, HttpServletResponse.SC_OK, "success", "User data retrieved", username);
+        } else {
+            sendJsonResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "error", "Unauthorized", null);
+        }
+    }
+
     private void handleLogin(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -60,7 +90,7 @@ public class AuthController extends HttpServlet {
         
         if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
             sendJsonResponse(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    "error", "Username and password are required");
+                    "error", "Username and password are required", null);
             return;
         }
         
@@ -73,10 +103,10 @@ public class AuthController extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             
             sendJsonResponse(response, HttpServletResponse.SC_OK, 
-                    "success", "Login successful");
+                    "success", "Login successful", user.getUsername());
         } else {
             sendJsonResponse(response, HttpServletResponse.SC_UNAUTHORIZED, 
-                    "error", "Invalid username or password");
+                    "error", "Invalid username or password", null);
         }
     }
     
@@ -90,7 +120,7 @@ public class AuthController extends HttpServlet {
         if (username == null || password == null || email == null || 
                 username.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty()) {
             sendJsonResponse(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    "error", "Username, password, and email are required");
+                    "error", "Username, password, and email are required", null);
             return;
         }
         
@@ -103,10 +133,10 @@ public class AuthController extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             
             sendJsonResponse(response, HttpServletResponse.SC_CREATED, 
-                    "success", "Registration successful");
+                    "success", "Registration successful", user.getUsername());
         } else {
             sendJsonResponse(response, HttpServletResponse.SC_CONFLICT, 
-                    "error", "Username already exists");
+                    "error", "Username already exists", null);
         }
     }
     
@@ -119,11 +149,11 @@ public class AuthController extends HttpServlet {
         }
         
         sendJsonResponse(response, HttpServletResponse.SC_OK, 
-                "success", "Logout successful");
+                "success", "Logout successful", null);
     }
     
     private void sendJsonResponse(HttpServletResponse response, int status, 
-            String type, String message) throws IOException {
+            String type, String message, String username) throws IOException {
         
         response.setContentType("application/json");
         response.setStatus(status);
@@ -131,9 +161,13 @@ public class AuthController extends HttpServlet {
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("status", type);
         jsonResponse.put("message", message);
+        if (username != null) {
+            jsonResponse.put("username", username);
+        }
         
         PrintWriter out = response.getWriter();
         out.print(jsonResponse.toJSONString());
         out.flush();
     }
 }
+
