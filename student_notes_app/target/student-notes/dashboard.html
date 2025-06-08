@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Notes</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>Student Notes</h1>
+            </div>
+            <div class="sidebar-user">
+                <span id="username-display">Usuário</span>
+                <button id="logout-btn" class="btn btn-small">Sair</button>
+            </div>
+            <div class="sidebar-menu">
+                <h3>Categorias</h3>
+                <ul id="categories-list">
+                    <li><a href="#" data-category="all" class="active">Todas as Notas</a></li>
+                    <li><a href="#" data-category="favorites">Favoritas</a></li>
+                </ul>
+                <div class="sidebar-add-category">
+                    <input type="text" id="new-category" placeholder="Nova categoria">
+                    <button id="add-category-btn" class="btn btn-small">+</button>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <header class="content-header">
+                <h2>Minhas Anotações</h2>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar anotações...">
+                    <button id="search-btn" class="btn">Buscar</button>
+                </div>
+                <button id="new-note-btn" class="btn btn-primary">Nova Anotação</button>
+            </header>
+            
+            <div class="notes-container" id="notes-container">
+                <!-- Notes will be loaded here dynamically -->
+                <div class="empty-state" id="empty-state">
+                    <p>Nenhuma anotação encontrada.</p>
+                    <button id="create-first-note-btn" class="btn btn-primary">Criar Primeira Anotação</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal for creating/editing notes -->
+    <div class="modal" id="note-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Nova Anotação</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="note-form">
+                    <input type="hidden" id="note-id">
+                    <div class="form-group">
+                        <label for="note-title">Título</label>
+                        <input type="text" id="note-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-category">Categoria</label>
+                        <select id="note-category">
+                            <option value="">Sem categoria</option>
+                            <!-- Categories will be loaded here dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-content">Conteúdo</label>
+                        <textarea id="note-content" rows="10"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-tags">Tags (separadas por vírgula)</label>
+                        <input type="text" id="note-tags">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="note-favorite">
+                            Marcar como favorita
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancel-note-btn" class="btn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

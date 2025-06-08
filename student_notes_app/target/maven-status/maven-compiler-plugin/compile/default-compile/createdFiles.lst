@@ -1,0 +1,13 @@
+com\studentnotes\model\Tag.class
+com\studentnotes\model\User.class
+com\studentnotes\controller\HomeController.class
+com\studentnotes\service\UserService.class
+com\studentnotes\dao\NoteDAO.class
+com\studentnotes\service\NoteService.class
+com\studentnotes\dao\UserDAO.class
+com\studentnotes\dao\TagDAO.class
+com\studentnotes\util\DatabaseUtil.class
+com\studentnotes\util\AuthFilter.class
+com\studentnotes\controller\NoteController.class
+com\studentnotes\model\Note.class
+com\studentnotes\controller\AuthController.class
